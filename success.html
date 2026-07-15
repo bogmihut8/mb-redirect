@@ -18,7 +18,8 @@
             const search = window.location.search;
             const params = search ? '&' + search.substring(1) : '';
             const isAndroid = /Android/i.test(navigator.userAgent);                                                                                   
-                                                                                                                                                   
+
+            if (isAndroid) {
               const intentUrl =                                                                                                                       
                 "intent://payment-redirect?status=success" + params +                                                                                 
                 "#Intent;scheme=myapp;package=host.exp.exponent;end;";                                                                           
