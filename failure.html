@@ -14,9 +14,19 @@
         <div class="spinner"></div>                                                                                                               
         <h2>Tranzacție eșuată</h2>                                                                                                                
         <p>Te întorci în aplicație...</p>                                                                                                         
-        <script>                                                                                                                                  
-            // Redirect back to the app and indicate failure                                                                                      
-            window.location.href = "myapp://payment-redirect?status=failure" + window.location.search.replace('?', '&');                          
+        <script>
+            const search = window.location.search;
+            const params = search ? '&' + search.substring(1) : '';
+            const isAndroid = /Android/i.test(navigator.userAgent);                                                                                   
+                                                                                                                                                   
+              const intentUrl =                                                                                                                       
+                "intent://payment-redirect?status=failure" + params +                                                                                 
+                "#Intent;scheme=myapp;package=com.bogmihut8.MBMobile;end;";                                                                           
+                                                                                                                                                      
+              window.location.href = intentUrl;                                                                                                       
+            } else {                                                                                                                                  
+              window.location.href = "myapp://payment-redirect?status=failure" + window.location.search.replace('?', '&');                                                              
+            }                 
         </script>                                                                                                                                 
     </body>
     </html>
