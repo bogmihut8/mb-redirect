@@ -22,38 +22,24 @@
         <script>                                                                                                                              
             const DEV_MODE = false; // Set to true only when testing in Expo Go                                                               
                                                                                                                                               
-            const PRODUCTION_SCHEME = "myapp";                                                                                                
-            const PRODUCTION_PACKAGE = "com.bogmihut8.MBMobile";                                                                              
-                                                                                                                                              
             const search = window.location.search;                                                                                            
             const params = search ? '&' + search.substring(1) : '';                                                                           
-            const isAndroid = /Android/i.test(navigator.userAgent);                                                                           
                                                                                                                                               
             let targetUrl = "";                                                                                                               
                                                                                                                                               
             if (DEV_MODE) {                                                                                                                   
                 targetUrl = "exp://192.168.1.140:8081/--/payment-redirect?status=success" + params;                                           
             } else {                                                                                                                          
-                if (isAndroid) {                                                                                                              
-                    // Correct Chrome Intent syntax with browser_fallback_url                                                                 
-                    targetUrl = "intent://payment-redirect?status=success" + params +                                                         
-                                "#Intent;scheme=" + PRODUCTION_SCHEME +                                                                       
-                                ";package=" + PRODUCTION_PACKAGE +                                                                            
-                                ";S.browser_fallback_url=" + encodeURIComponent(window.location.href) +                                       
-                                ";end;";
-                } else {
-                    targetUrl = PRODUCTION_SCHEME + "://payment-redirect?status=success" + params;
-                }
-            }
-  
-            // Set button link
-            const btn = document.getElementById("redirect-button");
-            btn.href = targetUrl;
-  
-            // Trigger redirect after 100ms delay to bypass Chrome auto-redirect block
-            setTimeout(function() {
-                window.location.assign(targetUrl);
-            }, 100);
-        </script>
-    </body>
-    </html>
+                // Direct custom scheme works on both iOS and Android preview APKs                                                            
+                targetUrl = "myapp://payment-redirect?status=success" + params;                                                               
+            }                                                                                                                                 
+                                                                                                                                              
+            // 1. Set fallback button link                                                                                                    
+            const btn = document.getElementById("redirect-button");                                                                           
+            btn.href = targetUrl;                                                                                                             
+                                                                                                                                              
+            // 2. Auto-redirect                                                                                                               
+            window.location.href = targetUrl;                                                                                                 
+        </script>                                                                                                                             
+    </body>                                                                                                                                   
+    </html>   
