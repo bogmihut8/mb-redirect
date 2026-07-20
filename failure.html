@@ -19,40 +19,28 @@
                                                                                                                                               
         <!-- Fallback button in case browser blocks automatic redirect -->                                                                    
         <a id="redirect-button" class="button" href="#">Apasă aici dacă nu te-ai redirecționat</a>                                            
-                                                                                                                                              
+        
         <script>                                                                                                                              
-            // 1. SET TO true FOR EXPO GO TESTING, set to false FOR PRODUCTION BUILD                                                          
-            const DEV_MODE = false;                                                                                                            
-                                                                                                                                              
-            // 2. Configure package and scheme names                                                                                          
-            const PRODUCTION_SCHEME = "myapp";                                                                                                
-            const PRODUCTION_PACKAGE = "com.bogmihut8.MBMobile"; // <-- Set this to your new package name!                                    
+            const DEV_MODE = false; // Set to true only when testing in Expo Go                                                               
                                                                                                                                               
             const search = window.location.search;                                                                                            
             const params = search ? '&' + search.substring(1) : '';                                                                           
-            const isAndroid = /Android/i.test(navigator.userAgent);                                                                           
                                                                                                                                               
-            let redirectUrl = "";                                                                                                             
+            let targetUrl = "";                                                                                                               
                                                                                                                                               
             if (DEV_MODE) {                                                                                                                   
-                // Testing in Expo Go (Localhost packager bridge on Android)                                                                  
-                redirectUrl = "exp://192.168.1.140:8081/--/payment-redirect?status=failure" + params;                                              
+                targetUrl = "exp://192.168.1.140:8081/--/payment-redirect?status=failure" + params;                                           
             } else {                                                                                                                          
-                // Production standalone build                                                                                                
-                if (isAndroid) {                                                                                                              
-                    redirectUrl = "intent://payment-redirect?status=failure" + params + 
-                                  "#Intent;scheme=" + PRODUCTION_SCHEME + 
-                                  ";package=" + PRODUCTION_PACKAGE + ";end;";
-                } else {
-                    redirectUrl = PRODUCTION_SCHEME + "://payment-redirect?status=failure" + params;
-                }
-            }
-  
-            // Set the fallback button link
-            document.getElementById("redirect-button").href = redirectUrl;
-  
-            // Try automatic redirect
-            window.location.href = redirectUrl;
-        </script>
+                // Direct custom scheme works on both iOS and Android preview APKs                                                            
+                targetUrl = "myapp://payment-redirect?status=failure" + params;                                                               
+            }                                                                                                                                 
+                                                                                                                                              
+            // 1. Set fallback button link                                                                                                    
+            const btn = document.getElementById("redirect-button");                                                                           
+            btn.href = targetUrl;                                                                                                             
+                                                                                                                                              
+            // 2. Auto-redirect                                                                                                               
+            window.location.href = targetUrl;                                                                                                 
+        </script> 
     </body>
     </html>
